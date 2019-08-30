@@ -1,36 +1,38 @@
-<!DOCTYPE HTML>
-<body>
+<!DOCTYPE html>
+<html>
 <head>
-<title>FORM LOGIN</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 </head>
+<body>
 <form action="" method="POST" id="form_login">
-        <table align="center">
-            <br />
-            <h3><center>LOGIN</center></h3>
-            <br />
-            <tr>
-                <td> <label>Username</label></td>
-                <td><input type="text" placeholder="enter username" name="username" id="username"></td>
-            </tr>
-            <tr>
-                <td><label>Password</label></td>
-                <td><input type="password" placeholder="enter password" name="pass" id="pass"></td>
-            </tr>
-            <tr>
-                <td><input type="hidden" name="action" id="action" value="login"></td>
-                <td><input type="submit" name="btn_login" id="btn_login" value="LOGIN"></td>
-            </tr>
-        </table>
+    <div class="login-box">
+        <h1>Login</h1>
+        <div class="textbox">
+            <i class="fa fa-user" aria-hidden="true"></i>
+            <input type="text" placeholder="Username or NIP" id="username" name="username">
+        </div>
+        <div class="textbox">
+            <i class="fa fa-lock" aria-hidden="true"></i>
+            <input type="password" placeholder="Password" id="pass" name="pass">
+        </div>
+        <td><input type="hidden" name="action" id="action" value="login"></td>
+        <td><input class="btn" type="submit" name="btn_login" id="btn_login" value="LOGIN"></td>
+    </div>
 </form>
+
 </body>
+
+</html>
 
 <script type="text/javascript">
     $(document).ready(function(){
         $('#form_login').on('submit', function(event){
             event.preventDefault();
             if($('#username').val() == ""){
-                alert("Enter Username");
+                alert("Enter Username or Nip");
             }
             else if($('#pass').val() == ""){
                 alert("Enter Password");
@@ -44,14 +46,25 @@
                     success:function(data){
                         var response = JSON.parse(data);
                         if(response.status == "ok"){
-                            alert("Berhasil Login");
-                            window.location.href="Index.php";
+                            $.each(response.result , function(key, val){
+                                var level = val.level_pegawai;
+                                alert("Berhasil Login");
+                                if(level == "HRD"){
+                                    window.location.href="LevelHRD.php";
+                                }
+                                else if(level == "ATASAN"){
+                                    window.location.href="LevelPegawai.php";
+                                }
+                                else{
+                                    window.location.href="LevelPegawai.php";
+                                }
+                            }) 
                         }
                         else if(response.status == "error"){
                             window.location.href="FormLogin.php";
                             alert("Gagal Login");
-                        } 
-                       // console.log(data);
+                        }  
+                        console.log(data);
                     }
                 })
             }
